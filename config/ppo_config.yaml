@@ -1,0 +1,5 @@
+learning_rate: 3e-4
+clip_range: 0.2
+gae_lambda: 0.95
+num_steps: 2048
+num_epochs: 10
