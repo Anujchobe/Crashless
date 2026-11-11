@@ -1,0 +1,11 @@
+# SAC in CARLA. ~20-100 sim steps/s means 50k steps is roughly 10-40 min.
+total_steps: 50000
+buffer_size: 100000
+batch_size: 256
+learning_starts: 5000       # from scratch; fine-tuning from 2D uses --learning-starts 1000
+lr: 3.0e-4
+gamma: 0.99
+tau: 0.005
+hidden: 256
+init_alpha: 0.2
+log_every: 1000

@@ -1,0 +1,14 @@
+total_steps: 1000000
+n_envs: 8
+n_steps: 256
+epochs: 10
+minibatch: 256
+lr: 3.0e-4
+gamma: 0.99
+gae_lambda: 0.95
+clip: 0.2
+ent_coef: 0.0
+vf_coef: 0.5
+max_grad_norm: 0.5
+hidden: 64
+target_kl: 0.03

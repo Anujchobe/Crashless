@@ -1,4 +1,5 @@
 #!/bin/bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+set -e
+python3 -m venv .venv
+.venv/bin/pip install -q -r requirements.txt
+echo "Activate with: source .venv/bin/activate"

@@ -1,0 +1,12 @@
+# CARLA env settings (crashless/carla_env.py, CarlaConfig).
+# Reward weights are copied from configs/env.yaml at load time so both sims
+# always use the same reward. Contract fields (dt, rays, speeds) must not be
+# changed here unless you change configs/env.yaml too.
+host: localhost
+port: 2000
+town: Town02
+no_rendering: true          # sensors used here are ray casts; no GPU rendering needed
+route_length: 200.0
+junction_choice: straightest
+n_obstacles: 4
+obstacle_sensing: lidar     # ground_truth = exact boxes, use to debug the lidar path
