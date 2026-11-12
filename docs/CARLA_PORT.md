@@ -44,7 +44,7 @@ Steps 4 and 5 at 20-100 steps/s take ~5-25 min each. If CARLA hangs, kill both t
 
 ## How the port works (read with `crashless/carla_env.py`)
 
-1. **Same contract.** 14 observations, 2 actions, same reward, same episode rules as `env.py`. `test_carla_config_matches_2d_contract` enforces it. That is what makes transfer measurable.
+1. **Same contract.** 14 observations, 2 actions, the same reward terms and episode rules as `env.py`. `test_carla_config_matches_2d_contract` checks the shared constants. Two measurements differ: the 2D env measures progress along x with a first-order lateral offset, while CARLA uses arc length and an exact projection.
 2. **Route.** Follow CARLA waypoints 1 m apart from a random spawn point; at junctions take the straightest branch. Corridor = whole two-lane road: centre line, half-width = 1 lane (4 m in Town02, same as 2D).
 3. **Geometry** (`crashless/route.py`, 9 tests): project the car onto the route polyline → progress `s`, lateral offset, road heading. A search window around the last segment stops it snapping to a nearby part of the route.
 4. **Rays.** Road edges come from route geometry. Obstacles come from a 1-channel semantic lidar on the front bumper, keeping only points whose object id is one of our parked cars; `lidar_ray_distances` bins them into the 9 rays. `obstacle_sensing: ground_truth` swaps in exact boxes for debugging.
@@ -64,13 +64,13 @@ Steps 4 and 5 at 20-100 steps/s take ~5-25 min each. If CARLA hangs, kill both t
 
 | Date | What | Result |
 |---|---|---|
-| 2026-11-10 | `route.py` + tests, `carla_env.py`, scripts | 227 tests pass on Mac |
+| 2026-11-10 | `route.py` + tests, `carla_env.py`, scripts | 28 tests (227 cases) pass on Mac |
 | 2026-11-10 | Server setup on the Linux laptop | 3 crashes before it ran; see table above |
 | 2026-11-10 | First `carla_check` | Worked first time: routes 214 m, Town02 half-width 4.0 m (same as 2D), 105 steps/s |
 | 2026-11-10 | Lidar vs ground truth: 0.93 m mean / 7.5 m p95 error | Cause: each ray took the nearest point in a +-7.5 deg cone, 2D rays are thin. Cone narrowed to +-1 deg: p95 error 0.12 m |
 | 2026-11-10 | Zero-shot transfer, 20 episodes | 2D SAC: 65% success (96% in 2D), 30% collision. Lane-follow PD: 35% |
 | 2026-11-10 | Fine-tune vs scratch, 30k CARLA steps each (~11 min each, ~45 steps/s with updates) | 20-episode evals said 65% vs 50%: too noisy |
 | 2026-11-10 | Re-evaluated all four on 100 episodes | Lane-follow 33%, zero-shot 69%, scratch 68%, **fine-tuned 83%** (seed 0) |
-| 2026-11-11 | Seeds 1-2 (`scripts/carla_seeds.sh`, `scripts/carla_report.py`) | Fine-tuned 75% ± 14% vs scratch 45% ± 31% vs zero-shot 48% ± 16%; fine-tuned won on all 3 seeds |
+| 2026-11-11 | Seeds 1-2 (`scripts/carla_seeds.sh`, `scripts/carla_report.py`) | Fine-tuned 75% ± 14% vs scratch 45% ± 31% vs zero-shot 48% ± 16%; fine-tuned beat scratch on all 3 seeds (one-sided sign test p = 0.125, not significant). Evaluated on Town02, the training map |
 | 2026-11-11 | Scratch seed 1 failed: 1% success | It learned to crawl at 2.3 m/s and time out on 48% of routes: same local optimum as 2D SAC seed 1 in the smoothness ablation (2.8 m/s). Slow driving avoids the -50 crash penalty |
 | 2026-11-11 | Zero-shot varies 31-69% across seeds that all scored 96-100% in 2D | 2D success does not predict transfer. Most zero-shot losses are off-road (18% avg) at Town02's 90 deg junctions, which the 2D roads never have |

@@ -1,6 +1,8 @@
 # Results: CARLA (Town02, CARLA 0.9.16, `-nullrhi`)
 
-100 episodes per trained policy, deterministic actions, eval seeds 1,000,000+, same reward and observation contract as the 2D sim. Mean ± std across training seeds.
+100 episodes per trained policy, deterministic actions, eval seeds 1,000,000+, same reward terms and observation contract as the 2D sim (progress and lateral offset are measured differently; see README). Mean ± std across training seeds.
+
+**Not a held-out test.** Eval seeds change the random draws, but routes still start from Town02's spawn points on the map the CARLA agents trained on; only obstacle placement is new. Rows are comparable (same episodes for every policy), but these are not unseen roads.
 
 | Policy | CARLA training | Seeds | Success | Collision | Off-road | Timeout | Speed m/s | Abs steer change |
 |---|---|---|---|---|---|---|---|---|
@@ -10,6 +12,8 @@
 | **SAC 2D-pretrained + fine-tuned** | 30k steps | 3 | 75% ± 14% | 21% ± 8% | 4% ± 5% | 1% ± 1% | 11.5 ± 1.4 | 0.081 ± 0.009 |
 
 Success per seed: sac_2d: 69%, 31%, 44%; sac_scratch: 68%, 1%, 65%; sac_finetune: 83%, 55%, 87%
+
+Fine-tuned beat scratch on 3/3 seeds: one-sided sign test p = 0.125 (not significant at 0.05).
 
 Training-time success (stochastic actions, last 50 episodes), mean across seeds:
 

@@ -27,11 +27,11 @@ PPO gives up about 3 points of success for 77% less steering activity. For SAC i
 
 **Reproduce:** `python scripts/benchmark.py smoothness && python scripts/report.py smoothness`
 
-## 2. Unpassable obstacle layouts (caught before any training)
+## 2. Obstacle spacing (caught before any training)
 
 **Symptom (found during design review).** The first obstacle sampler drew obstacle positions uniformly along the road. Two obstacles on opposite sides of the lane a few metres apart leave no gap a car of radius 1 m can get through at speed. Any agent would "fail" those episodes, inflating collision rates with impossible layouts.
 
-**Fix.** One obstacle per equal road segment, with an 8 m margin from each segment edge, which guarantees at least 16 m spacing and the first obstacle at least 33 m from the start. `test_obstacle_layout_always_passable` checks this over 200 seeds.
+**Fix.** One obstacle per equal road segment, with an 8 m margin from each segment edge, which guarantees at least 16 m spacing along x and the first obstacle at least 33 m from the start. `test_obstacle_layout_always_passable` checks this spacing over 200 seeds. Despite its name, the test does not prove a layout is drivable. It checks neither the lateral gap nor whether a car at 14 m/s can swerve between alternating-side obstacles 16 m apart. Proving that would need a scripted planner driving every layout.
 
 ## 3. Time-limit truncation treated as a crash (prevented, with a regression test)
 

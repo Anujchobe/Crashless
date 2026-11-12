@@ -4,7 +4,7 @@ Why not CARLA directly: CARLA needs a Linux/Windows GPU server and minutes per
 episode, which makes multi-seed benchmarking and unit tests impractical. This
 env keeps the parts of the problem the RL agent actually sees (a ray-based
 range sensor, lane geometry, continuous steering/throttle, collisions) and runs
-~10k steps/s on a laptop CPU. The observation/action contract is documented in
+~20k steps/s on one laptop CPU core (measured with random actions). The observation/action contract is documented in
 README.md so a CARLA wrapper can expose the same interface.
 
 Dynamics: kinematic bicycle model, dt = 0.1 s.

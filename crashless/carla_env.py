@@ -25,7 +25,8 @@ Coordinates: CARLA is left-handed (y right, yaw clockwise, degrees). Everything
 is converted to our right-handed frame (y left, yaw counter-clockwise, radians)
 on the way in, and steering is negated on the way out.
 
-Server: run CARLA first, e.g.  ./CarlaUE4.sh -RenderOffScreen -quality-level=Low
+Server: run CARLA 0.9.16 first, with no renderer (rendering crashed on the test GPU):
+    ./CarlaUE4.sh /Game/Carla/Maps/Town02 -nullrhi -nosound -carla-rpc-port=2000
 This env switches the world to synchronous mode (fixed dt) and, by default,
 no-rendering mode; `close()` switches both back.
 """
@@ -96,7 +97,7 @@ class CarlaDrivingEnv(gym.Env):
     def __init__(self, config: CarlaConfig | dict | None = None):
         if carla is None:
             raise ImportError("the `carla` package is not installed. On the CARLA machine: "
-                              "pip install carla==0.9.15 (or the .whl in CARLA/PythonAPI/carla/dist)")
+                              "pip install carla==0.9.16 on Python 3.10-3.12 (or the .whl in CARLA/PythonAPI/carla/dist)")
         super().__init__()
         self.cfg = config if isinstance(config, CarlaConfig) else CarlaConfig.from_dict(config)
         c = self.cfg
